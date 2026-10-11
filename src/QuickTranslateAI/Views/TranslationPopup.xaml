@@ -1,0 +1,246 @@
+<Window x:Class="QuickTranslateAI.Views.TranslationPopup"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="QuickTranslate AI"
+        Width="430"
+        MinHeight="120"
+        AllowsTransparency="False"
+        Background="Transparent"
+        FontFamily="{DynamicResource App.FontFamily}"
+        ResizeMode="NoResize"
+        ShowActivated="False"
+        ShowInTaskbar="False"
+        SizeToContent="Height"
+        Topmost="True"
+        UseLayoutRounding="True"
+        WindowStartupLocation="Manual"
+        WindowStyle="None">
+
+    <Window.Resources>
+        <Storyboard x:Key="SpinnerSpin" RepeatBehavior="Forever">
+            <DoubleAnimation Storyboard.TargetName="SpinnerRotation"
+                             Storyboard.TargetProperty="Angle"
+                             From="0"
+                             To="360"
+                             Duration="0:0:0.9" />
+        </Storyboard>
+    </Window.Resources>
+
+    <!--
+        Giriş animasyonu pencerenin kendisine değil bu katmana uygulanır:
+        AllowsTransparency=False olan bir pencerede Window.Opacity çalışmaz.
+    -->
+    <Grid x:Name="RootLayer" RenderTransformOrigin="0.5,0">
+        <Grid.RenderTransform>
+            <TranslateTransform x:Name="RootOffset" />
+        </Grid.RenderTransform>
+
+        <!-- DWM camının üstündeki ince renk katmanı. -->
+        <Border Background="{DynamicResource App.GlassWash}" />
+
+        <!-- "Sıvı" his: köşelerde yumuşak renk lekeleri. -->
+        <Canvas ClipToBounds="True" IsHitTestVisible="False">
+            <Ellipse Canvas.Left="-90"
+                     Canvas.Top="-110"
+                     Width="260"
+                     Height="220"
+                     Fill="{DynamicResource App.BlobA}"
+                     Opacity="0.75" />
+            <Ellipse Canvas.Right="-80"
+                     Canvas.Bottom="-120"
+                     Width="240"
+                     Height="200"
+                     Fill="{DynamicResource App.BlobB}"
+                     Opacity="0.55" />
+        </Canvas>
+
+        <!-- Üst kenarda spekülar çizgi. -->
+        <Border Height="1"
+                VerticalAlignment="Top"
+                Background="{DynamicResource App.CardStroke}"
+                IsHitTestVisible="False" />
+
+        <StackPanel Margin="16,13,16,14">
+
+            <!-- ===== Başlık ===== -->
+            <Grid Margin="0,0,0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Ellipse Width="8"
+                         Height="8"
+                         VerticalAlignment="Center"
+                         Fill="{DynamicResource App.Accent}" />
+
+                <TextBlock x:Name="HeaderText"
+                           Grid.Column="1"
+                           Margin="8,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource Text.Section}"
+                           Text="QUICKTRANSLATE AI" />
+
+                <StackPanel Grid.Column="2"
+                            Margin="10,0,0,0"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                    <Border x:Name="LanguageChip" Style="{StaticResource Surface.Chip}" Visibility="Collapsed">
+                        <TextBlock x:Name="LanguageChipText"
+                                   FontSize="11"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource App.Accent}" />
+                    </Border>
+                </StackPanel>
+
+                <Button x:Name="CloseButton"
+                        Grid.Column="3"
+                        Click="OnCloseClick"
+                        Content="✕"
+                        Style="{StaticResource Button.Icon}"
+                        ToolTip="Kapat (Esc)" />
+            </Grid>
+
+            <!-- ===== Yükleniyor ===== -->
+            <StackPanel x:Name="LoadingPanel" Orientation="Horizontal">
+                <Grid Width="18" Height="18" VerticalAlignment="Center">
+                    <Ellipse Stroke="{DynamicResource App.CardStroke}" StrokeThickness="2" />
+                    <Path Stroke="{DynamicResource App.Accent}"
+                          StrokeStartLineCap="Round"
+                          StrokeThickness="2"
+                          Data="M 9 1 A 8 8 0 0 1 17 9"
+                          RenderTransformOrigin="0.5,0.5">
+                        <Path.RenderTransform>
+                            <RotateTransform x:Name="SpinnerRotation" />
+                        </Path.RenderTransform>
+                    </Path>
+                </Grid>
+                <TextBlock x:Name="LoadingText"
+                           Margin="10,0,0,0"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource Text.Subtitle}"
+                           Text="Çevriliyor…" />
+            </StackPanel>
+
+            <!-- ===== Onay (gizlilik) ===== -->
+            <StackPanel x:Name="ConfirmPanel" Visibility="Collapsed">
+                <TextBlock Style="{StaticResource Text.Body}"
+                           Text="Bu metin çeviri için yapay zekâ sağlayıcısına gönderilecek." />
+                <Border Margin="0,10,0,0" Padding="11,9" Style="{StaticResource Surface.Card}">
+                    <TextBlock x:Name="ConfirmPreview"
+                               MaxHeight="120"
+                               Foreground="{DynamicResource App.TextSecondary}"
+                               Style="{StaticResource Text.Caption}"
+                               TextTrimming="CharacterEllipsis" />
+                </Border>
+                <StackPanel Margin="0,12,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Margin="0,0,8,0"
+                            Click="OnCancelConfirmClick"
+                            Content="İptal"
+                            Style="{StaticResource Button.Subtle}" />
+                    <Button Click="OnAcceptConfirmClick" Content="Gönder ve çevir" Style="{StaticResource Button.Accent}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- ===== Hata ===== -->
+            <StackPanel x:Name="ErrorPanel" Visibility="Collapsed">
+                <Border Padding="11,9" Background="{DynamicResource App.DangerSoft}" CornerRadius="10">
+                    <TextBlock x:Name="ErrorText"
+                               Foreground="{DynamicResource App.Danger}"
+                               Style="{StaticResource Text.Body}"
+                               FontSize="13" />
+                </Border>
+                <StackPanel Margin="0,12,0,0" HorizontalAlignment="Right" Orientation="Horizontal">
+                    <Button Margin="0,0,8,0"
+                            Click="OnOpenSettingsClick"
+                            Content="Ayarlar"
+                            Style="{StaticResource Button.Subtle}" />
+                    <Button x:Name="RetryButton"
+                            Click="OnRetryClick"
+                            Content="Tekrar dene"
+                            Style="{StaticResource Button.Glass}" />
+                </StackPanel>
+            </StackPanel>
+
+            <!-- ===== Sonuç ===== -->
+            <StackPanel x:Name="ResultPanel" Visibility="Collapsed">
+                <ScrollViewer MaxHeight="260" Style="{StaticResource Scroll.Glass}">
+                    <TextBox x:Name="ResultText"
+                             Padding="0"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             CaretBrush="{DynamicResource App.Accent}"
+                             FontSize="14.5"
+                             Foreground="{DynamicResource App.Text}"
+                             IsReadOnly="True"
+                             SelectionBrush="{DynamicResource App.Accent}"
+                             SelectionOpacity="0.3"
+                             TextWrapping="Wrap" />
+                </ScrollViewer>
+
+                <!-- Özgün metin, istendiğinde açılır. -->
+                <Button x:Name="ToggleSourceButton"
+                        Margin="0,10,0,0"
+                        Padding="0,2"
+                        HorizontalAlignment="Left"
+                        Click="OnToggleSourceClick"
+                        Content="Özgün metni göster"
+                        FontSize="11.5"
+                        Foreground="{DynamicResource App.TextTertiary}"
+                        Style="{StaticResource Button.Subtle}" />
+
+                <Border x:Name="SourceBox"
+                        Margin="0,8,0,0"
+                        Padding="11,9"
+                        Style="{StaticResource Surface.Card}"
+                        Visibility="Collapsed">
+                    <ScrollViewer MaxHeight="130" Style="{StaticResource Scroll.Glass}">
+                        <TextBlock x:Name="SourceText"
+                                   Foreground="{DynamicResource App.TextSecondary}"
+                                   Style="{StaticResource Text.Caption}" />
+                    </ScrollViewer>
+                </Border>
+
+                <Border Height="1" Margin="0,12,0,11" Background="{DynamicResource App.Divider}" />
+
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <ComboBox x:Name="TargetLanguageCombo"
+                              Width="150"
+                              HorizontalAlignment="Left"
+                              ItemTemplate="{StaticResource Item.DisplayName}"
+                              SelectionChanged="OnTargetLanguageChanged"
+                              Style="{StaticResource Input.Combo}"
+                              ToolTip="Başka bir dile çevir" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal">
+                        <Button x:Name="ReplaceButton"
+                                Margin="0,0,8,0"
+                                Click="OnReplaceClick"
+                                Content="Yerine yaz"
+                                Style="{StaticResource Button.Glass}"
+                                ToolTip="Çeviriyi panoya alır ve Ctrl+V gönderir" />
+                        <Button x:Name="CopyButton"
+                                Click="OnCopyClick"
+                                Content="Kopyala"
+                                Style="{StaticResource Button.Accent}" />
+                    </StackPanel>
+                </Grid>
+            </StackPanel>
+        </StackPanel>
+
+        <!-- Otomatik kapanma göstergesi. -->
+        <Border x:Name="CountdownBar"
+                Height="2"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Bottom"
+                Background="{DynamicResource App.Accent}"
+                Opacity="0.5" />
+    </Grid>
+</Window>

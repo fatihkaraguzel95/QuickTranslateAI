@@ -1,0 +1,639 @@
+<Window x:Class="QuickTranslateAI.Views.SetupWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="QuickTranslate AI kurulumu"
+        Width="820"
+        Height="740"
+        AllowsTransparency="False"
+        Background="Transparent"
+        FontFamily="{DynamicResource App.FontFamily}"
+        ResizeMode="NoResize"
+        UseLayoutRounding="True"
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="None">
+
+    <Grid>
+        <!-- Cam üzerindeki renk katmanı ve yumuşak lekeler. -->
+        <Border Background="{DynamicResource App.GlassWash}" />
+        <Canvas ClipToBounds="True" IsHitTestVisible="False">
+            <Ellipse Canvas.Left="-140"
+                     Canvas.Top="-160"
+                     Width="460"
+                     Height="400"
+                     Fill="{DynamicResource App.BlobA}"
+                     Opacity="0.6" />
+            <Ellipse Canvas.Right="-160"
+                     Canvas.Bottom="-180"
+                     Width="420"
+                     Height="380"
+                     Fill="{DynamicResource App.BlobB}"
+                     Opacity="0.45" />
+        </Canvas>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <!-- ===== Başlık çubuğu ===== -->
+            <Grid x:Name="TitleBar"
+                  Height="44"
+                  Background="Transparent"
+                  MouseLeftButtonDown="OnTitleBarDrag">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Margin="18,0,0,0" VerticalAlignment="Center" Orientation="Horizontal">
+                    <Ellipse Width="8" Height="8" Fill="{DynamicResource App.Accent}" />
+                    <TextBlock x:Name="WindowTitleText"
+                               Margin="9,0,0,0"
+                               Style="{StaticResource Text.Section}"
+                               Text="QUICKTRANSLATE AI · KURULUM" />
+                </StackPanel>
+
+                <Button Grid.Column="1"
+                        Margin="0,0,8,0"
+                        Click="OnCancelClick"
+                        Content="✕"
+                        Style="{StaticResource Button.Icon}"
+                        ToolTip="Kurulumdan çık" />
+            </Grid>
+
+            <!-- ===== Gövde ===== -->
+            <Grid Grid.Row="1" Margin="18,4,18,0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="212" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Adım listesi -->
+                <Border Padding="14,16" Style="{StaticResource Surface.Card}">
+                    <StackPanel>
+                        <TextBlock Margin="4,0,0,14" Style="{StaticResource Text.Section}" Text="ADIMLAR" />
+
+                        <Grid x:Name="StepRow1"
+                              Margin="0,0,0,4"
+                              Background="Transparent"
+                              MouseLeftButtonUp="OnStepRowClick"
+                              Tag="1">
+                            <Border x:Name="StepPill1"
+                                    Background="{DynamicResource App.AccentSoft}"
+                                    CornerRadius="9" />
+                            <StackPanel Margin="10,9" Orientation="Horizontal">
+                                <Border x:Name="StepDot1"
+                                        Width="22"
+                                        Height="22"
+                                        Background="{DynamicResource App.Accent}"
+                                        CornerRadius="11">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="11"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource App.OnAccent}"
+                                               Text="1" />
+                                </Border>
+                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource App.Text}" Text="Çeviri motoru" />
+                                    <TextBlock FontSize="11" Foreground="{DynamicResource App.TextTertiary}" Text="Sağlayıcı ve API anahtarı" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid x:Name="StepRow2"
+                              Margin="0,0,0,4"
+                              Background="Transparent"
+                              MouseLeftButtonUp="OnStepRowClick"
+                              Tag="2">
+                            <Border x:Name="StepPill2" Background="Transparent" CornerRadius="9" />
+                            <StackPanel Margin="10,9" Orientation="Horizontal">
+                                <Border x:Name="StepDot2"
+                                        Width="22"
+                                        Height="22"
+                                        Background="{DynamicResource App.ControlFill}"
+                                        CornerRadius="11">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="11"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource App.TextSecondary}"
+                                               Text="2" />
+                                </Border>
+                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource App.Text}" Text="Dil ve davranış" />
+                                    <TextBlock FontSize="11" Foreground="{DynamicResource App.TextTertiary}" Text="Hedef dil, sonuç biçimi" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Grid x:Name="StepRow3"
+                              Background="Transparent"
+                              MouseLeftButtonUp="OnStepRowClick"
+                              Tag="3">
+                            <Border x:Name="StepPill3" Background="Transparent" CornerRadius="9" />
+                            <StackPanel Margin="10,9" Orientation="Horizontal">
+                                <Border x:Name="StepDot3"
+                                        Width="22"
+                                        Height="22"
+                                        Background="{DynamicResource App.ControlFill}"
+                                        CornerRadius="11">
+                                    <TextBlock HorizontalAlignment="Center"
+                                               VerticalAlignment="Center"
+                                               FontSize="11"
+                                               FontWeight="SemiBold"
+                                               Foreground="{DynamicResource App.TextSecondary}"
+                                               Text="3" />
+                                </Border>
+                                <StackPanel Margin="10,0,0,0" VerticalAlignment="Center">
+                                    <TextBlock FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource App.Text}" Text="Görünüm" />
+                                    <TextBlock FontSize="11" Foreground="{DynamicResource App.TextTertiary}" Text="Tema, cam, başlangıç" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+
+                        <Border Height="1" Margin="4,16,4,14" Background="{DynamicResource App.Divider}" />
+
+                        <TextBlock x:Name="RailHint"
+                                   Margin="4,0"
+                                   Style="{StaticResource Text.Caption}"
+                                   Text="Kurulum yalnızca bir kez yapılır. Tüm ayarları daha sonra tepsi simgesinden değiştirebilirsin." />
+
+                        <!-- Yalnızca ayar modunda: kısayol hatırlatması. -->
+                        <Border x:Name="ShortcutCard"
+                                Margin="0,14,0,0"
+                                Padding="10,9"
+                                Background="{DynamicResource App.AccentSoft}"
+                                CornerRadius="10"
+                                Visibility="Collapsed">
+                            <StackPanel>
+                                <TextBlock Style="{StaticResource Text.Section}" Text="KISAYOL" />
+                                <TextBlock Margin="0,5,0,0"
+                                           FontSize="13"
+                                           FontWeight="SemiBold"
+                                           Foreground="{DynamicResource App.Text}"
+                                           Text="Ctrl + C  ×2" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+
+                <!-- Adım içerikleri -->
+                <Border Grid.Column="1" Margin="14,0,0,0" Padding="22,20" Style="{StaticResource Surface.Card}">
+                    <Grid>
+
+                        <!-- ============ ADIM 1 ============ -->
+                        <ScrollViewer x:Name="Step1" Style="{StaticResource Scroll.Glass}">
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Style="{StaticResource Text.Title}" Text="Çeviri motorunu seç" />
+                                <TextBlock Margin="0,5,0,18"
+                                           Style="{StaticResource Text.Subtitle}"
+                                           Text="Anahtarın yalnızca bu bilgisayarda, Windows Kimlik Bilgisi Yöneticisi'nde saklanır." />
+
+                                <RadioButton x:Name="ProviderClaude"
+                                             Checked="OnProviderChanged"
+                                             GroupName="Provider"
+                                             IsChecked="True"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Anthropic Claude" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Biçim ve ton korumasında güçlü. SAP hata kodları ve yer tutucular bozulmadan kalır." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="ProviderOpenAi"
+                                             Checked="OnProviderChanged"
+                                             GroupName="Provider"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="OpenAI" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Elinde hazır bir OpenAI anahtarı varsa bunu seç." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="ProviderCustom"
+                                             Checked="OnProviderChanged"
+                                             GroupName="Provider"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Özel uç nokta (NVIDIA NIM, Groq, yerel…)" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="OpenAI uyumlu her servis. Adresi ve modeli kendin yazarsın." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <!-- Yalnızca özel uç nokta seçiliyken görünür. -->
+                                <StackPanel x:Name="CustomPanel" Visibility="Collapsed">
+                                    <TextBlock Margin="0,14,0,6" Style="{StaticResource Text.Label}" Text="Hazır ayarlar" />
+                                    <WrapPanel>
+                                        <Button Margin="0,0,6,6"
+                                                Click="OnPresetClick"
+                                                Content="NVIDIA NIM"
+                                                Style="{StaticResource Button.Glass}"
+                                                Tag="nvidia" />
+                                        <Button Margin="0,0,6,6"
+                                                Click="OnPresetClick"
+                                                Content="Groq"
+                                                Style="{StaticResource Button.Glass}"
+                                                Tag="groq" />
+                                        <Button Margin="0,0,6,6"
+                                                Click="OnPresetClick"
+                                                Content="OpenRouter"
+                                                Style="{StaticResource Button.Glass}"
+                                                Tag="openrouter" />
+                                        <Button Margin="0,0,6,6"
+                                                Click="OnPresetClick"
+                                                Content="Yerel (Ollama)"
+                                                Style="{StaticResource Button.Glass}"
+                                                Tag="ollama" />
+                                    </WrapPanel>
+
+                                    <Grid Margin="0,8,0,0">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="160" />
+                                            <ColumnDefinition Width="12" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+
+                                        <StackPanel>
+                                            <TextBlock Style="{StaticResource Text.Label}" Text="Görünen ad" />
+                                            <TextBox x:Name="CustomNameBox" Style="{StaticResource Input.Text}" />
+                                        </StackPanel>
+
+                                        <StackPanel Grid.Column="2">
+                                            <TextBlock Style="{StaticResource Text.Label}" Text="Uç nokta adresi" />
+                                            <TextBox x:Name="CustomUrlBox"
+                                                     Style="{StaticResource Input.Text}"
+                                                     TextChanged="OnCustomUrlChanged" />
+                                        </StackPanel>
+                                    </Grid>
+
+                                    <TextBlock Margin="0,6,0,0"
+                                               Style="{StaticResource Text.Caption}"
+                                               Text="OpenAI uyumlu taban adres. /chat/completions kısmını eklemene gerek yok." />
+
+                                    <CheckBox x:Name="CustomJsonCheck"
+                                              Margin="0,12,0,0"
+                                              Content="Sunucu JSON modunu destekliyor (response_format)"
+                                              Style="{StaticResource Input.Switch}" />
+                                    <TextBlock Margin="50,6,0,0"
+                                               Style="{StaticResource Text.Caption}"
+                                               Text="Emin değilsen kapalı bırak. Kapalıyken çeviri biçimi yalnızca istem metniyle sağlanır; çoğu modelde sorunsuz çalışır." />
+                                </StackPanel>
+
+                                <TextBlock Margin="0,14,0,0" Style="{StaticResource Text.Label}" Text="Model" />
+                                <ComboBox x:Name="ModelCombo"
+                                          IsEditable="True"
+                                          IsTextSearchEnabled="False"
+                                          MaxDropDownHeight="240"
+                                          Style="{StaticResource Input.Combo}" />
+                                <TextBlock x:Name="ModelHint"
+                                           Margin="0,6,0,0"
+                                           Style="{StaticResource Text.Caption}" />
+
+                                <TextBlock Margin="0,16,0,0" Style="{StaticResource Text.Label}" Text="API anahtarı" />
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <PasswordBox x:Name="ApiKeyBox"
+                                                 PasswordChanged="OnApiKeyChanged"
+                                                 Style="{StaticResource Input.Password}" />
+                                    <TextBox x:Name="ApiKeyPlain"
+                                             Style="{StaticResource Input.Text}"
+                                             TextChanged="OnApiKeyPlainChanged"
+                                             Visibility="Collapsed" />
+                                    <Button Grid.Column="1"
+                                            Margin="8,0,0,0"
+                                            Click="OnToggleKeyVisibility"
+                                            Content="Göster"
+                                            Style="{StaticResource Button.Glass}" />
+                                </Grid>
+
+                                <TextBlock x:Name="KeyHint"
+                                           Margin="0,8,0,0"
+                                           Style="{StaticResource Text.Caption}"
+                                           Text="Anahtarı console.anthropic.com adresinden oluşturabilirsin." />
+
+                                <StackPanel Margin="0,16,0,0" Orientation="Horizontal">
+                                    <Button x:Name="TestButton"
+                                            Click="OnTestConnectionClick"
+                                            Content="Bağlantıyı test et"
+                                            Style="{StaticResource Button.Glass}" />
+                                    <TextBlock x:Name="TestStatus"
+                                               Margin="12,0,0,0"
+                                               VerticalAlignment="Center"
+                                               Style="{StaticResource Text.Subtitle}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- ============ ADIM 2 ============ -->
+                        <ScrollViewer x:Name="Step2" Style="{StaticResource Scroll.Glass}" Visibility="Collapsed">
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Style="{StaticResource Text.Title}" Text="Dil ve sonuç davranışı" />
+                                <TextBlock Margin="0,5,0,18"
+                                           Style="{StaticResource Text.Subtitle}"
+                                           Text="Kaynak dil her zaman otomatik algılanır; yalnızca hedefi belirlersin." />
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Label}" Text="Hedef dil" />
+                                        <ComboBox x:Name="TargetCombo"
+                                                  MaxDropDownHeight="260"
+                                                  ItemTemplate="{StaticResource Item.DisplayName}"
+                                                  Style="{StaticResource Input.Combo}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Style="{StaticResource Text.Label}" Text="Metin zaten hedef dildeyse" />
+                                        <ComboBox x:Name="FallbackCombo"
+                                                  MaxDropDownHeight="260"
+                                                  ItemTemplate="{StaticResource Item.DisplayName}"
+                                                  Style="{StaticResource Input.Combo}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Margin="0,8,0,0"
+                                           Style="{StaticResource Text.Caption}"
+                                           Text="Örnek: hedef Türkçe, ikinci dil Almanca ise Almanca metin Türkçeye, Türkçe metin Almancaya çevrilir. Tek kısayol iki yönlü çalışır." />
+
+                                <Border Height="1" Margin="0,18" Background="{DynamicResource App.Divider}" />
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource Text.Label}" Text="Çeviri hazır olduğunda" />
+
+                                <RadioButton x:Name="BehaviorPopup"
+                                             GroupName="Behavior"
+                                             IsChecked="True"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="İmlecin yanında cam pencerede göster" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Pano değişmez, özgün metin korunur. SAP'deki salt okunur alanlarda da çalışır." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="BehaviorClipboard"
+                                             GroupName="Behavior"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Panoya kopyala ve bildirim göster" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Çeviri panoya yazılır; istediğin yere Ctrl+V ile yapıştırırsın." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="BehaviorReplace"
+                                             GroupName="Behavior"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Seçili metnin yerine yaz" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Ctrl+V gönderilir. Yalnızca düzenlenebilir alanlarda çalışır; salt okunur ekranlarda etkisizdir." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <Grid Margin="0,14,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="16" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <StackPanel>
+                                        <TextBlock Style="{StaticResource Text.Label}" Text="İki Ctrl+C arası en fazla" />
+                                        <ComboBox x:Name="DoubleCopyCombo"
+                                                  ItemTemplate="{StaticResource Item.Label}"
+                                                  Style="{StaticResource Input.Combo}" />
+                                    </StackPanel>
+
+                                    <StackPanel Grid.Column="2">
+                                        <TextBlock Style="{StaticResource Text.Label}" Text="Popup kendiliğinden kapansın" />
+                                        <ComboBox x:Name="AutoCloseCombo"
+                                                  ItemTemplate="{StaticResource Item.Label}"
+                                                  Style="{StaticResource Input.Combo}" />
+                                    </StackPanel>
+                                </Grid>
+
+                                <!-- Yalnızca ayar modunda görünen gelişmiş alanlar. -->
+                                <StackPanel x:Name="AdvancedStep2" Visibility="Collapsed">
+                                    <Border Height="1" Margin="0,18" Background="{DynamicResource App.Divider}" />
+
+                                    <TextBlock Style="{StaticResource Text.Label}" Text="Özel çeviri talimatı (isteğe bağlı)" />
+                                    <TextBox x:Name="CustomInstructionsBox"
+                                             Height="64"
+                                             AcceptsReturn="True"
+                                             Style="{StaticResource Input.Text}"
+                                             TextWrapping="Wrap"
+                                             VerticalContentAlignment="Top" />
+                                    <TextBlock Margin="0,6,0,0"
+                                               Style="{StaticResource Text.Caption}"
+                                               Text="Örnek: &quot;Resmî dil kullan, teknik terimleri İngilizce bırak.&quot; Her çeviride modele iletilir." />
+
+                                    <CheckBox x:Name="EnabledCheck"
+                                              Margin="0,16,0,0"
+                                              Content="Çift Ctrl+C dinlemesi etkin"
+                                              IsChecked="True"
+                                              Style="{StaticResource Input.Switch}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+
+                        <!-- ============ ADIM 3 ============ -->
+                        <ScrollViewer x:Name="Step3" Style="{StaticResource Scroll.Glass}" Visibility="Collapsed">
+                            <StackPanel Margin="0,0,10,0">
+                                <TextBlock Style="{StaticResource Text.Title}" Text="Görünüm" />
+                                <TextBlock Margin="0,5,0,18"
+                                           Style="{StaticResource Text.Subtitle}"
+                                           Text="Cam efekti Windows'un kendi kompozisyonuyla çizilir; arkadaki pencereler gerçek anlamda bulanıklaşır." />
+
+                                <TextBlock Margin="0,0,0,10" Style="{StaticResource Text.Label}" Text="Tema" />
+                                <UniformGrid Columns="3" Rows="1">
+                                    <RadioButton x:Name="ThemeSystem"
+                                                 Margin="0,0,8,0"
+                                                 Checked="OnThemePreviewChanged"
+                                                 GroupName="Theme"
+                                                 IsChecked="True"
+                                                 Style="{StaticResource Input.OptionCard}">
+                                        <StackPanel>
+                                            <Grid Height="34" Margin="0,0,0,8">
+                                                <Border CornerRadius="6">
+                                                    <Border.Background>
+                                                        <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                            <GradientStop Offset="0.49" Color="#F3F4F7" />
+                                                            <GradientStop Offset="0.51" Color="#1B1D21" />
+                                                        </LinearGradientBrush>
+                                                    </Border.Background>
+                                                </Border>
+                                            </Grid>
+                                            <TextBlock FontSize="12.5" FontWeight="SemiBold" Text="Sistem" />
+                                        </StackPanel>
+                                    </RadioButton>
+
+                                    <RadioButton x:Name="ThemeLight"
+                                                 Margin="0,0,8,0"
+                                                 Checked="OnThemePreviewChanged"
+                                                 GroupName="Theme"
+                                                 Style="{StaticResource Input.OptionCard}">
+                                        <StackPanel>
+                                            <Border Height="34"
+                                                    Margin="0,0,0,8"
+                                                    Background="#F3F4F7"
+                                                    CornerRadius="6" />
+                                            <TextBlock FontSize="12.5" FontWeight="SemiBold" Text="Açık" />
+                                        </StackPanel>
+                                    </RadioButton>
+
+                                    <RadioButton x:Name="ThemeDark"
+                                                 Checked="OnThemePreviewChanged"
+                                                 GroupName="Theme"
+                                                 Style="{StaticResource Input.OptionCard}">
+                                        <StackPanel>
+                                            <Border Height="34"
+                                                    Margin="0,0,0,8"
+                                                    Background="#1B1D21"
+                                                    CornerRadius="6" />
+                                            <TextBlock FontSize="12.5" FontWeight="SemiBold" Text="Koyu" />
+                                        </StackPanel>
+                                    </RadioButton>
+                                </UniformGrid>
+
+                                <TextBlock Margin="0,18,0,10" Style="{StaticResource Text.Label}" Text="Pencere arka planı" />
+
+                                <RadioButton x:Name="BackdropAcrylic"
+                                             Checked="OnThemePreviewChanged"
+                                             GroupName="Backdrop"
+                                             IsChecked="True"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Liquid glass (Acrylic)" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Arkadaki içerik bulanıklaşır ve renk sızdırır. Windows 11 gerekir." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="BackdropMica"
+                                             Checked="OnThemePreviewChanged"
+                                             GroupName="Backdrop"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Mica" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="Masaüstü duvar kâğıdından renk alan sakin doku. Ayarlar penceresi için uygun." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <RadioButton x:Name="BackdropSolid"
+                                             Checked="OnThemePreviewChanged"
+                                             GroupName="Backdrop"
+                                             Style="{StaticResource Input.OptionCard}">
+                                    <StackPanel>
+                                        <TextBlock FontSize="13.5" FontWeight="SemiBold" Text="Düz renk" />
+                                        <TextBlock Margin="0,2,0,0"
+                                                   Style="{StaticResource Text.Caption}"
+                                                   Text="En düşük GPU maliyeti. Uzak masaüstü ve sanal makinelerde önerilir." />
+                                    </StackPanel>
+                                </RadioButton>
+
+                                <Border Height="1" Margin="0,18" Background="{DynamicResource App.Divider}" />
+
+                                <CheckBox x:Name="SystemAccentCheck"
+                                          Margin="0,0,0,14"
+                                          Checked="OnThemePreviewChanged"
+                                          Content="Vurgu rengini Windows'tan al"
+                                          IsChecked="True"
+                                          Style="{StaticResource Input.Switch}"
+                                          Unchecked="OnThemePreviewChanged" />
+
+                                <CheckBox x:Name="AutoStartCheck"
+                                          Margin="0,0,0,14"
+                                          Content="Windows açılışında otomatik başlat"
+                                          IsChecked="True"
+                                          Style="{StaticResource Input.Switch}" />
+
+                                <CheckBox x:Name="ConfirmCheck"
+                                          Content="Göndermeden önce onay iste (gizlilik)"
+                                          Style="{StaticResource Input.Switch}" />
+
+                                <TextBlock Margin="50,6,0,0"
+                                           Style="{StaticResource Text.Caption}"
+                                           Text="Açıkken her çeviri öncesi metnin bir önizlemesi gösterilir ve onay beklenir. Kapalıyken yalnızca karakter sınırını aşan metinler için sorulur." />
+
+                                <!-- Yalnızca ayar modunda görünen gelişmiş alanlar. -->
+                                <StackPanel x:Name="AdvancedStep3" Visibility="Collapsed">
+                                    <Border Height="1" Margin="0,18" Background="{DynamicResource App.Divider}" />
+
+                                    <TextBlock Style="{StaticResource Text.Label}" Text="Onaysız gönderilebilecek en fazla karakter" />
+                                    <ComboBox x:Name="MaxCharsCombo"
+                                              Width="220"
+                                              HorizontalAlignment="Left"
+                                              ItemTemplate="{StaticResource Item.Label}"
+                                              Style="{StaticResource Input.Combo}" />
+
+                                    <CheckBox x:Name="RestoreClipboardCheck"
+                                              Margin="0,16,0,0"
+                                              Content="&quot;Yerine yaz&quot; sonrası panoyu eski haline döndür"
+                                              IsChecked="True"
+                                              Style="{StaticResource Input.Switch}" />
+
+                                    <Border Height="1" Margin="0,18" Background="{DynamicResource App.Divider}" />
+
+                                    <TextBlock Style="{StaticResource Text.Section}" Text="DOSYA KONUMLARI" />
+                                    <TextBlock x:Name="PathsText"
+                                               Margin="0,8,0,0"
+                                               Style="{StaticResource Text.Caption}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </ScrollViewer>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <!-- ===== Alt çubuk ===== -->
+            <Grid Grid.Row="2" Margin="18,16,18,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock x:Name="FooterHint"
+                           VerticalAlignment="Center"
+                           Style="{StaticResource Text.Caption}"
+                           Text="Devam etmek için geçerli bir API anahtarı gerekir." />
+
+                <StackPanel Grid.Column="1" Orientation="Horizontal">
+                    <Button x:Name="BackButton"
+                            Margin="0,0,8,0"
+                            Click="OnBackClick"
+                            Content="Geri"
+                            IsEnabled="False"
+                            Style="{StaticResource Button.Subtle}" />
+                    <Button x:Name="NextButton"
+                            MinWidth="120"
+                            Click="OnNextClick"
+                            Content="İleri"
+                            Style="{StaticResource Button.Accent}" />
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Window>

@@ -1,0 +1,26 @@
+## Derleme çıktıları
+bin/
+obj/
+publish/
+installer/Output/
+
+## Visual Studio / Rider
+.vs/
+.idea/
+*.user
+*.suo
+*.userprefs
+
+## İşletim sistemi
+Thumbs.db
+desktop.ini
+.DS_Store
+
+## Yerel ayarlar — API anahtarı burada DEĞİL (Windows Credential Manager'da),
+## ama yine de kullanıcıya özel oldukları için depoya girmezler.
+*.local.json
+
+## Claude Code yerel yapilandirmasi.
+## settings.local.json icinde baska projelere ait canli anahtarlar olabilir;
+## bu klasor asla depoya girmemeli.
+.claude/
