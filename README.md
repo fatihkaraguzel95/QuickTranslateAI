@@ -63,7 +63,7 @@ Bundan sonra uygulama sistem tepsisinde durur. Ana pencereyi açık tutmana gere
 
 ```powershell
 winget install Microsoft.DotNet.SDK.9
-git clone https://github.com/<kullanici>/QuickTranslateAI.git
+git clone https://github.com/fatihkaraguzel95/QuickTranslateAI.git
 cd QuickTranslateAI
 .\build.ps1                 # publish\QuickTranslateAI.exe (kendi kendine yeten, ~177 MB)
 .\build.ps1 -Installer      # ayrıca installer\Output\QuickTranslateAI-Setup.exe
