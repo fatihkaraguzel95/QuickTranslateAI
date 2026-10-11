@@ -1,10 +1,21 @@
 # QuickTranslate AI
 
+[![Sürüm](https://img.shields.io/github/v/release/fatihkaraguzel95/QuickTranslateAI?label=s%C3%BCr%C3%BCm)](https://github.com/fatihkaraguzel95/QuickTranslateAI/releases/latest)
+[![İndirme](https://img.shields.io/github/downloads/fatihkaraguzel95/QuickTranslateAI/total?label=indirme)](https://github.com/fatihkaraguzel95/QuickTranslateAI/releases)
+[![Lisans](https://img.shields.io/badge/lisans-MIT-blue)](LICENSE)
+
 Windows'ta arka planda çalışan, yapay zekâ destekli hızlı çeviri aracı.
 Metni nerede olursan ol seç, **Ctrl + C tuşuna iki kez bas**, çeviri imlecin yanında belirsin.
 
 SAP GUI'deki bir hata mesajı, Outlook'taki Almanca bir e-posta, tarayıcıdaki bir paragraf —
 uygulama değiştirmene, sekme açmana, yapıştırıp beklemene gerek yok.
+
+### ⬇️ [QuickTranslateAI-Setup.exe indir](https://github.com/fatihkaraguzel95/QuickTranslateAI/releases/latest/download/QuickTranslateAI-Setup.exe)
+
+51.7 MB · Windows 10 1809+ · **yönetici hakkı istemez** · .NET kurulumu gerekmez
+
+> Paket kod imzalama sertifikasıyla imzalanmadığı için Windows SmartScreen uyarı
+> gösterebilir: **Ek bilgi → Yine de çalıştır**.
 
 ---
 
@@ -35,8 +46,8 @@ anlık olarak başka bir hedef dile çevirebilirsin.
 
 ### Hazır paketle
 
-1. [Releases](../../releases) sayfasından `QuickTranslateAI-Setup.exe` indir ve çalıştır.
-   Yönetici hakkı istemez.
+1. [En son sürümü indir](https://github.com/fatihkaraguzel95/QuickTranslateAI/releases/latest/download/QuickTranslateAI-Setup.exe)
+   ve çalıştır. Yönetici hakkı istemez; kurulum kendi kullanıcı profiline yapılır.
 2. Uygulama ilk açılışta **kurulum sihirbazını** gösterir. Gereken her şey burada sorulur:
    - Çeviri sağlayıcısı ve **API anahtarı**
    - Model
